@@ -1,0 +1,313 @@
+// Graphical variables
+@import "config/fonts";
+@import "config/colors";
+@import "config/bootstrap_variables";
+
+// External libraries
+@import "bootstrap";
+@import "font-awesome";
+
+// Your CSS partials
+@import "components/index";
+@import "pages/index";
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+:root {
+  --wax-cream: #f4ecde;
+  --wax-cream-strong: #ebe1d1;
+  --wax-ink: #111111;
+  --wax-border: rgba(17, 17, 17, 0.14);
+  --wax-shadow: 0 10px 24px rgba(17, 17, 17, 0.07);
+  --wax-blur: blur(18px);
+}
+
+body {
+  min-height: 100dvh;
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  background: var(--wax-cream);
+  color: var(--wax-ink);
+  overscroll-behavior-y: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a:not(.btn),
+a:not(.btn):visited,
+a:not(.btn):hover,
+a:not(.btn):active {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  text-transform: uppercase;
+}
+
+.delete-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline;
+  opacity: 0.8;
+}
+
+.auth-ticker {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.auth-ticker-top {
+  top: 1.25rem;
+}
+
+.auth-ticker-bottom {
+  bottom: 1.25rem;
+}
+
+.auth-ticker__track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  white-space: nowrap;
+  animation: auth-ticker-scroll 26s linear infinite;
+}
+
+.auth-ticker__track--reverse {
+  animation-direction: reverse;
+}
+
+.auth-ticker__track span {
+  display: inline-block;
+  font-family: "Syne", sans-serif;
+  font-size: clamp(3.75rem, 8vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.85;
+  color: rgba(17, 17, 17, 0.08);
+}
+
+
+.app-shell-auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+}
+
+.card,
+.btn,
+.form-control,
+.form-select,
+.badge {
+  border-radius: 0 !important;
+}
+
+.card {
+  border: 0;
+  background: rgba(255, 252, 247, 0.72);
+  box-shadow: var(--wax-shadow);
+  backdrop-filter: var(--wax-blur);
+}
+
+.btn {
+  border-width: 1px;
+  min-height: 40px;
+  padding: 0.55rem 1rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  box-shadow: none;
+  outline: none;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  font-family: "Syne", sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--wax-ink);
+  border-color: var(--wax-ink);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #242424;
+  border-color: #242424;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--wax-ink);
+  color: #111111;
+}
+
+.btn-secondary:hover {
+  background: rgba(17, 17, 17, 0.08);
+  border-color: var(--wax-ink);
+  color: #111111;
+}
+
+.btn-tertiary {
+  min-height: 40px;
+  padding: 0.55rem 1rem;
+  background: transparent;
+  border-color: var(--wax-ink);
+  color: #111111;
+  font-family: "Syne", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.btn-tertiary:hover {
+  background: rgba(17, 17, 17, 0.08);
+  border-color: var(--wax-ink);
+  color: #111111;
+}
+
+.btn-tertiary--with-icon {
+  justify-content: space-between;
+}
+
+.btn-tertiary__label,
+.btn-tertiary__icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-tertiary__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-tertiary__icon {
+  flex: 0 0 auto;
+  font-family: "Syne", sans-serif;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.btn:focus,
+.btn:focus-visible,
+.btn:active {
+  box-shadow: none;
+  outline: none;
+}
+
+.btn:disabled,
+.btn.disabled {
+  box-shadow: none;
+  opacity: 0.62;
+}
+
+.form-control,
+.form-select {
+  min-height: 40px;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--wax-border);
+  background: rgba(255, 252, 247, 0.82);
+  color: var(--wax-ink);
+  font-family: var(--bs-body-font-family);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: none;
+}
+
+.form-control:focus,
+.form-control:focus-visible,
+.form-select:focus,
+.form-select:focus-visible {
+  border-color: var(--wax-ink);
+  box-shadow: none;
+  outline: none;
+}
+
+textarea.form-control {
+  min-height: 40px;
+  resize: vertical;
+}
+
+select.form-select {
+  padding-right: 2.5rem;
+}
+
+input[type="file"].form-control {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+@keyframes auth-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 992px) {
+  body.is-signed-in {
+    padding-bottom: 0;
+    padding-left: 112px;
+  }
+
+  body.is-signed-in .app-shell {
+    padding-bottom: 0;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .auth-ticker-top {
+    top: 0.75rem;
+  }
+
+  .auth-ticker-bottom {
+    bottom: 0.75rem;
+  }
+
+  .feed-page::before {
+    content: "";
+    display: block;
+    height: 24px;
+  }
+
+  .app-shell-auth {
+    padding-top: 5.5rem;
+    padding-bottom: 5.5rem;
+  }
+}

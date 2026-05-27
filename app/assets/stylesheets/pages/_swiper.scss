@@ -1,0 +1,105 @@
+.swiper-wrapper {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.circles-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(255, 251, 245, 0.38), rgba(255, 251, 245, 0) 44%),
+    linear-gradient(135deg, #f6efe3 0%, #efe4d3 48%, #f8f2e9 100%);
+  background-color: var(--wax-cream);
+  z-index: 0;
+}
+
+.circles-bg__rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 141vmax;
+  height: 141vmax;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.circles-bg__ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.36s cubic-bezier(0.12, 0.82, 0.22, 1);
+}
+
+.circles-bg__ring path {
+  fill: none;
+  stroke: #111111;
+  stroke-opacity: 0.055;
+  stroke-linecap: round;
+}
+
+.circles-bg > *:not(.circles-bg__rings) {
+  position: relative;
+  z-index: 0;
+}
+
+.swiper-page {
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rem 3rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  touch-action: none;
+  z-index: 1;
+  align-items: center;
+}
+
+.vinyl-card {
+  width: 90vw;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  margin: auto;
+  opacity: 0;
+  z-index: 1;
+}
+
+.vinyl-card-animation {
+  transition: opacity 0.36s ease, transform 0.5s ease;
+}
+
+
+.vinyl-card-logo {
+  width: 3rem;
+  height: 3rem;
+  opacity: 0.6;
+}
+.vinyl-card.active {
+  opacity: 1;
+}
+
+.swiper-sleeve.is-visible {
+  opacity: 1;
+}
+
+.swiper-sleeve .randomizer-sleeve__artwork {
+  opacity: 1;
+}
+
+.swiper-sleeve .randomizer-sleeve__meta {
+  max-width: calc(100% - 3rem);
+}
+
+@media (max-width: 767.98px) {
+  .swiper-page {
+    padding: 5.5rem 1rem 6rem;
+  }
+}

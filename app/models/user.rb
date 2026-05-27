@@ -1,0 +1,19 @@
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+
+  validates :name, presence: true
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
+
+  belongs_to :favorite_vinyl, class_name: "Vinyl", optional: true
+  has_many :user_vinyls
+  has_many :vinyls, through: :user_vinyls
+  has_many :folders
+  has_many :personas, dependent: :destroy
+  has_many :active_follows, class_name: "Follower", foreign_key: :follower_id, dependent: :destroy
+  has_many :passive_follows, class_name: "Follower", foreign_key: :followed_id, dependent: :destroy
+  has_many :following, through: :active_follows, source: :followed
+  has_many :followers, through: :passive_follows, source: :follower
+end
