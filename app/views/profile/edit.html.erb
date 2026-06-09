@@ -12,80 +12,13 @@
       <div class="row g-4">
         <div class="col-12 col-lg-4">
           <div class="profile-edit-sidebar d-grid gap-4">
-            <div
-              class="profile-avatar-panel"
-              data-controller="profile-avatar"
-              data-profile-avatar-preview-url-value="<%= avatar_preview_profile_path(@user) %>"
-              data-profile-avatar-current-source-type-value="<%= @user.avatar_source_type %>"
-            >
+            <div class="profile-avatar-panel">
               <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
                 <div>
                   <p class="profile-kicker mb-1">Profile picture</p>
-                  <h2 class="h5 mb-0">Generate a new portrait</h2>
+                  <h2 class="h5 mb-0">Profile portrait</h2>
                 </div>
               </div>
-
-              <img
-                src="<%= @user.avatar_url.presence || "https://ui-avatars.com/api/?name=#{ERB::Util.url_encode(@user.username.to_s)}&background=071013&color=F4F4F4&size=320" %>"
-                alt="Generated profile portrait preview"
-                class="profile-avatar profile-avatar-large profile-avatar-generator-preview"
-                data-profile-avatar-target="preview"
-              >
-
-              <p class="small text-muted mb-3">
-                Click regenerate for a free random portrait, or upload your own image, then save it to Cloudinary for this profile.
-              </p>
-
-              <%= form_with model: @user, url: avatar_profile_path(@user), method: :patch, class: "d-grid gap-3", data: { action: "submit->profile-avatar#save" }, html: { multipart: true } do |avatar_form| %>
-                <div data-profile-avatar-target="status" class="small text-muted d-none"></div>
-                <%= avatar_form.hidden_field :avatar_source_url, data: { profile_avatar_target: "input" } %>
-                <div>
-                  <label class="form-label">Portrait type</label>
-                  <input type="hidden" value="" data-profile-avatar-target="genderInput">
-                  <div class="profile-avatar-filter-group" role="group" aria-label="Portrait type">
-                    <button
-                      type="button"
-                      class="profile-avatar-filter is-active"
-                      data-profile-avatar-target="genderButton"
-                      data-action="click->profile-avatar#selectGender"
-                      data-gender-value=""
-                    >
-                      Random
-                    </button>
-                    <button
-                      type="button"
-                      class="profile-avatar-filter"
-                      data-profile-avatar-target="genderButton"
-                      data-action="click->profile-avatar#selectGender"
-                      data-gender-value="female"
-                    >
-                      Female
-                    </button>
-                    <button
-                      type="button"
-                      class="profile-avatar-filter"
-                      data-profile-avatar-target="genderButton"
-                      data-action="click->profile-avatar#selectGender"
-                      data-gender-value="male"
-                    >
-                      Male
-                    </button>
-                  </div>
-                </div>
-                <%= button_tag "Regenerate",
-                  type: "button",
-                  class: "btn btn-secondary align-self-start",
-                  data: { action: "click->profile-avatar#regenerate" } %>
-                <div>
-                  <%= avatar_form.label :avatar_file, "Upload image", class: "form-label" %>
-                  <%= avatar_form.file_field :avatar_file,
-                    accept: "image/*",
-                    class: "form-control",
-                    data: { profile_avatar_target: "fileInput", action: "change->profile-avatar#uploadPreview" } %>
-                </div>
-                <%= avatar_form.submit "Save profile picture", class: "btn btn-primary", data: { profile_avatar_target: "saveButton" } %>
-              <% end %>
-
               <% if @user.avatar_url.present? %>
                 <div>
                   <p class="profile-kicker mb-2">Current picture</p>
@@ -93,7 +26,6 @@
                     src="<%= @user.avatar_url %>"
                     alt="<%= @user.username %>"
                     class="profile-avatar profile-avatar-current"
-                    data-profile-avatar-target="current"
                   >
                 </div>
               <% end %>
