@@ -1,10 +1,10 @@
 class ProfileController < ApplicationController
-  require "net/http"
-  require "tempfile"
+  require 'net/http'
+  require 'tempfile'
 
   before_action :set_profile_user, only: [:show]
-  before_action :ensure_current_user!, only: [:edit, :update, :destroy, :avatar, :avatar_preview]
-  before_action :set_current_user, only: [:edit, :update, :destroy, :avatar, :avatar_preview]
+  before_action :ensure_current_user!, only: %i[edit update destroy avatar avatar_preview]
+  before_action :set_current_user, only: %i[edit update destroy avatar avatar_preview]
 
   def show
     @vinyls = @user.vinyls
@@ -29,25 +29,25 @@ class ProfileController < ApplicationController
 
   def avatar
     source_type = if avatar_params[:avatar_file].present?
-      "uploaded"
-    else
-      "generated"
-    end
+                    'uploaded'
+                  else
+                    'generated'
+                  end
 
     upload_source = build_avatar_upload_source
 
     upload = Cloudinary::Uploader.upload(
       upload_source,
-      folder: "waxxee/profile_avatars",
+      folder: 'waxxee/profile_avatars',
       public_id: "user_#{@user.id}_avatar",
       overwrite: true,
       invalidate: true
     )
 
-    @user.update!(avatar_url: upload["secure_url"], avatar_source_type: source_type)
+    @user.update!(avatar_url: upload['secure_url'], avatar_source_type: source_type)
 
     respond_to do |format|
-      format.html { redirect_to edit_profile_path(@user), notice: "Profile picture updated." }
+      format.html { redirect_to edit_profile_path(@user), notice: 'Profile picture updated.' }
       format.json { render json: { avatar_url: @user.avatar_url, avatar_source_type: @user.avatar_source_type } }
     end
   rescue StandardError => e
@@ -100,66 +100,14 @@ class ProfileController < ApplicationController
 
     return attributes if favorite_id.blank?
 
-    unless current_user.vinyls.exists?(id: favorite_id)
-      attributes[:favorite_vinyl_id] = nil
-    end
+    attributes[:favorite_vinyl_id] = nil unless current_user.vinyls.exists?(id: favorite_id)
 
     attributes
-  end
-
-  def fetch_generated_avatar_url
-    uri = URI("https://randomuser.me/api/")
-    uri.query = URI.encode_www_form(seed: params[:cb].presence || Time.current.to_i, inc: "picture")
-
-    response = Net::HTTP.start(
-      uri.host,
-      uri.port,
-      use_ssl: true,
-      open_timeout: 5,
-      read_timeout: 15
-    ) do |http|
-      request = Net::HTTP::Get.new(uri)
-      request["User-Agent"] = "Waxxee/1.0"
-      http.request(request)
-    end
-
-    raise "Avatar generation failed with status #{response.code}" unless response.is_a?(Net::HTTPSuccess)
-
-    payload = JSON.parse(response.body)
-    image_url = payload.dig("results", 0, "picture", "large")
-    raise "Avatar generation returned no image" if image_url.blank?
-
-    image_url
   end
 
   def build_avatar_upload_source
     return avatar_params[:avatar_file].tempfile if avatar_params[:avatar_file].present?
 
     download_remote_image(avatar_params[:avatar_source_url])
-  end
-
-  def download_remote_image(url)
-    uri = URI(url)
-
-    response = Net::HTTP.start(
-      uri.host,
-      uri.port,
-      use_ssl: uri.scheme == "https",
-      open_timeout: 5,
-      read_timeout: 15
-    ) do |http|
-      request = Net::HTTP::Get.new(uri)
-      request["User-Agent"] = "Waxxee/1.0"
-      http.request(request)
-    end
-
-    raise "Could not download generated image: #{response.code}" unless response.is_a?(Net::HTTPSuccess)
-
-    extension = Rack::Mime::MIME_TYPES.invert[response["Content-Type"].to_s.split(";").first] || ".jpg"
-    tempfile = Tempfile.new(["profile-avatar", extension])
-    tempfile.binmode
-    tempfile.write(response.body)
-    tempfile.rewind
-    tempfile
   end
 end
