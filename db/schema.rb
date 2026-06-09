@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_02_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_154443) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -25,7 +25,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_02_120000) do
 
   create_table "folders", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "name"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_folders_on_user_id"
@@ -37,7 +36,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_02_120000) do
     t.bigint "follower_id", null: false
     t.datetime "updated_at", null: false
     t.index ["followed_id"], name: "index_followers_on_followed_id"
-    t.index ["follower_id"], name: "index_followers_on_follower_id"
+    t.index ["follower_id", "followed_id"], name: "index_followers_on_follower_id_and_followed_id", unique: true
   end
 
   create_table "personas", force: :cascade do |t|
@@ -58,6 +57,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_02_120000) do
     t.string "url"
     t.bigint "user_id"
     t.index ["user_id"], name: "index_personas_on_user_id"
+    t.index ["user_id"], name: "index_personas_on_user_id_primary", unique: true, where: "(primary_profile = true)"
   end
 
   create_table "user_vinyls", force: :cascade do |t|
