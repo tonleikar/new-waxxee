@@ -6,7 +6,6 @@ Rails.application.routes.draw do
 
 
   resources :welcome, only: [:index]
-  get "randomizer", to: "pages#randomizer", as: :randomizer
   resources :users, only: [:index]
   resources :feed, only: [:index], controller: :followers
   resources :followers, only: [:index, :create, :destroy]
