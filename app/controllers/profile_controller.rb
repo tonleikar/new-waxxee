@@ -48,20 +48,4 @@ class ProfileController < ApplicationController
   def profile_params
     params.require(:user).permit(:name, :username, :favorite_genre, :favorite_vinyl_id)
   end
-
-  def normalized_profile_params
-    attributes = profile_params
-    favorite_id = attributes[:favorite_vinyl_id]
-
-    return attributes if favorite_id.blank?
-
-    attributes[:favorite_vinyl_id] = nil unless current_user.vinyls.exists?(id: favorite_id)
-
-    attributes
-  end
-
-  def build_avatar_upload_source
-    # avatar upload handling removed
-    nil
-  end
 end
