@@ -21,9 +21,6 @@ Rails.application.routes.draw do
   resources :user_vinyls, only: %i[create destroy]
   resources :vinyls, only: %i[index show create]
   resources :discogs, only: %i[index create]
-  resources :profile, only: %i[show edit update destroy] do
-    patch :avatar, on: :member
-  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
