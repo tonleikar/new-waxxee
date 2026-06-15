@@ -57,12 +57,13 @@ class UserVinylsController < ApplicationController
 
     vinyl = JSON.parse(URI.open(url).read)
     {
-      title: normalized_title,
       artist: artist_name,
-      year: vinyl['year'],
-      country: vinyl['country'],
       artwork_url: vinyl['images'][0]['resource_url`'],
-      discogs_url: vinyl['release_id']
+      country: vinyl['country'],
+      discogs_url: vinyl['release_id'],
+      genre: vinyl['genres'],
+      title: vinyl['title'],
+      year: vinyl['released']
     }
   rescue OpenURI::HTTPError, JSON::ParserError, SocketError, URI::InvalidURIError => e
     flash[:alert] = e.message
