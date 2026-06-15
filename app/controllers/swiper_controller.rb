@@ -1,7 +1,5 @@
 require 'uri'
 class SwiperController < ApplicationController
-  include PersonaVinylPicker
-
   def index
     @key = ENV.fetch('DISCOGS_CONSUMER_KEY', nil)
     @secret = ENV.fetch('DISCOGS_CONSUMER_SECRET', nil)
@@ -26,10 +24,10 @@ class SwiperController < ApplicationController
 
   def vinyl_payload
     params.require(:vinyl).permit!.to_h if params[:vinyl].present?
-    @persona_record = selected_persona_record
-    @persona_key = selected_persona_key
+    # @persona_record = selected_persona_record
+    # @persona_key = selected_persona_key
     @persona = @persona_record&.picker_rule
-    @vinyls = filtered_vinyl_scope(@persona).to_a.sample(20)
+    # @vinyls = filtered_vinyl_scope(@persona).to_a.sample(20)
     @user_vinyl = UserVinyl.new
   end
 end

@@ -9,7 +9,7 @@
     data-swipe-key-value="<%= @persona_key %>"
     data-swipe-secret-value="<%= @secret %>"
       data-swipe-vinyls-value="<%= @vinyls.to_json(only: [:id, :artwork_url, :title, :artist, :year, :genre]) %>">
-    <h1 class="h3"><%= @persona[:title] %></h1>
+    <%# <h1 class="h3"></h1>@persona[:title] %>
     <template data-swipe-target="template">
       <%= render "swiper/vinyl_card", vinyl: nil %>
     </template>
