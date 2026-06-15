@@ -56,17 +56,13 @@ class UserVinylsController < ApplicationController
     url.query = URI.encode_www_form(query_params) if query_params.any?
 
     vinyl = JSON.parse(URI.open(url).read)
-    artist_name, release_title = vinyl['title'].to_s.split(' - ', 2)
-    normalized_title = release_title || vinyl['title']
-    normalized_year = vinyl['year'].to_i
-
     {
       title: normalized_title,
       artist: artist_name,
-      year: normalized_year,
+      year: vinyl['year'],
       country: vinyl['country'],
-      thumb: vinyl['thumb'],
-      discogs_url: vinyl['uri']
+      artwork_url: vinyl['images'][0]['resource_url`'],
+      discogs_url: vinyl['release_id']
     }
   rescue OpenURI::HTTPError, JSON::ParserError, SocketError, URI::InvalidURIError => e
     flash[:alert] = e.message
