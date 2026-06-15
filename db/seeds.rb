@@ -11,92 +11,94 @@
 require 'open-uri'
 require 'json'
 
-url = "https://api.discogs.com/users/samsamhailey/collection/folders/0/releases?page=1&per_page=100"
+url = 'https://api.discogs.com/users/samsamhailey/collection/folders/0/releases?page=1&per_page=100'
 
-User.find_or_create_by!(email: "paul@thebeatles.com") do |u|
-  u.password = "password123"
-  u.password_confirmation = "password123"
-  u.username = "paul"
+User.find_or_create_by!(email: 'paul@thebeatles.com') do |u|
+  u.password = 'password123'
+  u.password_confirmation = 'password123'
+  u.username = 'paul123'
+  u.name = 'Paul McCartney'
 end
 
 response = URI.open(url).read
 data = JSON.parse(response)
 
-puts "adding records"
+puts 'adding records'
 
-data["releases"].each do |line|
+data['releases'].each do |line|
   record = Vinyl.new
-  record.title = line["basic_information"]["title"]
-  record.artist = line["basic_information"]["artists"][0]["name"]
-  record.year = line["basic_information"]["year"]
-  record.artwork_url = line["basic_information"]["cover_image"]
-  record.format = line["basic_information"]["formats"][0]["descriptions"].join(" ")
-  record.genre  = line["basic_information"]["genres"].join(" / ")
+  record.title = line['basic_information']['title']
+  record.artist = line['basic_information']['artists'][0]['name']
+  record.year = line['basic_information']['year']
+  record.artwork_url = line['basic_information']['cover_image']
+  record.format = line['basic_information']['formats'][0]['descriptions'].join(' ')
+  record.genre  = line['basic_information']['genres'].join(' / ')
   record.save
 end
 
-puts "records added"
+puts 'records added'
 
 sample_users = [
-  { email: "debbie@waxxee.com", username: "debbie" },
-  { email: "miles@waxxee.com", username: "miles" },
-  { email: "joan@waxxee.com", username: "joan" },
-  { email: "prince@waxxee.com", username: "prince" },
-  { email: "sade@waxxee.com", username: "sade" },
-  { email: "bjork@waxxee.com", username: "bjork" }
+  { email: 'debbie@waxxee.com', username: 'debbie' },
+  { email: 'miles@waxxee.com', username: 'miles' },
+  { email: 'joan@waxxee.com', username: 'joan' },
+  { email: 'prince@waxxee.com', username: 'prince' },
+  { email: 'sade@waxxee.com', username: 'sade' },
+  { email: 'bjork@waxxee.com', username: 'bjork' }
 ]
 
 sample_users.each do |attrs|
   User.find_or_create_by!(email: attrs[:email]) do |user|
-    user.password = "password123"
-    user.password_confirmation = "password123"
+    user.password = 'password123'
+    user.password_confirmation = 'password123'
     user.username = attrs[:username]
+    user.name = "#{attrs[:username]}name"
   end
 end
 
 User.find_each do |user|
-  Vinyl.order("RANDOM()").limit(3).each do |vinyl|
+  Vinyl.order('RANDOM()').limit(3).each do |vinyl|
     UserVinyl.find_or_create_by!(user: user, vinyl: vinyl)
   end
 end
 
-premade = [ {
-  title: "uk garage",
+premade = [{
+  title: 'uk garage',
   summary: "ukg's signature blend of shuffling beats, soulful vocals, and bass-heavy grooves from the late 90s and early 2000s.",
   min_year: 1988,
   max_year: 1999,
-  genres: ["Electronic", "Dance", "UK Garage"],
-  image_url: "staff-picks/ukg-persona.jpg",
-  url: "https://api.discogs.com/database/search?style=UK+Garage&type=releaseyear=1996-2022"
+  genres: ['Electronic', 'Dance', 'UK Garage'],
+  image_url: 'staff-picks/ukg-persona.jpg',
+  url: 'https://api.discogs.com/database/search?style=UK+Garage&type=releaseyear=1996-2022'
 },
-{
-  title: "afrobeat",
-  summary: "Rhythmic grooves, vibrant percussion, and infectious energy from the heart of Afrobeat and its global offshoots.",
-  min_year: 1970,
-  max_year: 1989,
-  genres: ["Funk", "Soul", "Afrobeat"],
-  image_url: "staff-picks/afrobeat-persona.jpg",
-  url: "https://api.discogs.com/database/search?style=Afrobeat&genre=Funk+/+Soul&type=releaseyear=1970-1989"
-},
-{
-  title: "post-punk",
-  summary: "Dark, angular, and experimental sounds that defined the post-punk era, blending punk's raw energy with art-rock's creativity.",
-  min_year: 1979,
-  max_year: 1987,
-  genres: ["Post-Punk", "New Wave", "Electronic"],
-  image_url: "staff-picks/punk-persona.jpg",
-  url: "https://api.discogs.com/database/search?style=Post-Punk&genre=Rock&type=releaseyear=1979-1987"
-},
+           {
+             title: 'afrobeat',
+             summary: 'Rhythmic grooves, vibrant percussion, and infectious energy from the heart of Afrobeat and its global offshoots.',
+             min_year: 1970,
+             max_year: 1989,
+             genres: %w[Funk Soul Afrobeat],
+             image_url: 'staff-picks/afrobeat-persona.jpg',
+             url: 'https://api.discogs.com/database/search?style=Afrobeat&genre=Funk+/+Soul&type=releaseyear=1970-1989'
+           },
+           {
+             title: 'post-punk',
+             summary: "Dark, angular, and experimental sounds that defined the post-punk era, blending punk's raw energy with art-rock's creativity.",
+             min_year: 1979,
+             max_year: 1987,
+             genres: ['Post-Punk', 'New Wave', 'Electronic'],
+             image_url: 'staff-picks/punk-persona.jpg',
+             url: 'https://api.discogs.com/database/search?style=Post-Punk&genre=Rock&type=releaseyear=1979-1987'
+           },
 
-{
-  title: "jazz",
-  summary: "Soulful vocals, lush arrangements, and timeless songwriting across classic and contemporary jazz records.",
-  min_year: 1950,
-  max_year: 1978,
-  genres: ["Jazz"],
-  image_url: "staff-picks/jazz-persona.jpg",
-  url: "https://api.discogs.com/database/search?genre=Jazz&year=1950-1978&type=release"
-}]
+           {
+             title: 'jazz',
+             summary: 'Soulful vocals, lush arrangements, and timeless songwriting across classic and contemporary jazz records.',
+             min_year: 1950,
+             max_year: 1978,
+             genres: ['Jazz'],
+             image_url: 'staff-picks/jazz-persona.jpg',
+             url: 'https://api.discogs.com/database/search?genre=Jazz&year=1950-1978&type=release'
+           }]
 
 premade.each do |premade|
   p premade
