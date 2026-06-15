@@ -30,8 +30,6 @@ class VinylsController < ApplicationController
 
   def order_clause_for(sort)
     case sort
-    when 'title_desc'
-      { title: :desc }
     when 'title_asc'
       { title: :asc }
     when 'artist_asc'
@@ -43,7 +41,7 @@ class VinylsController < ApplicationController
     when 'year_asc'
       { year: :asc, title: :asc }
     else
-      recent_order_clause
+      { title: :desc }
     end
   end
 
