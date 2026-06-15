@@ -16,8 +16,8 @@ class SwiperController < ApplicationController
     return unless response
 
     data = JSON.parse(response)
-    p data['data'][0]['preview']
-    render json: { previewUrl: data['data'][0]['preview'] }, status: :created
+    preview = data.dig('data', 0, 'preview')
+    render json: { previewUrl: preview }, status: :created
   end
 
   private

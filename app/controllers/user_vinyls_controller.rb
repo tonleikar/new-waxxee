@@ -5,32 +5,28 @@ require 'uri'
 class UserVinylsController < ApplicationController
   def create
     release_id = user_vinyl_params[:release_id]
-    discogs_url = release_id
+    discogs_url = "https://www.discogs.com/release/#{release_id}"
 
     @new_vinyl = Vinyl.find_by(discogs_url: discogs_url)
 
     unless @new_vinyl
       vinyl_attributes = get_vinyl_from_discogs(release_id)
       unless vinyl_attributes
-        return redirect_back fallback_location: vinyls_path,
-                             alert: 'Failed to add vinyl to collection.'
+        return respond_to_request({ error: 'Failed to fetch vinyl from Discogs.' }, :unprocessable_entity)
       end
 
-      @new_vinyl = Vinyl.new(
-        vinyl_attributes.except(:thumb).merge(artwork_url: vinyl_attributes[:thumb])
-      )
+      @new_vinyl = Vinyl.new(vinyl_attributes)
 
       unless @new_vinyl.save
-        return redirect_back fallback_location: vinyls_path,
-                             alert: 'Failed to add vinyl to collection.'
+        return respond_to_request({ error: 'Failed to save vinyl to collection.' }, :unprocessable_entity)
       end
     end
 
     @new_user_vinyl = UserVinyl.new(user: current_user, vinyl: @new_vinyl)
     if @new_user_vinyl.save
-      redirect_back fallback_location: vinyls_path, notice: 'Vinyl added to collection.'
+      respond_to_request({ message: 'Vinyl added to collection.' }, :created)
     else
-      redirect_back fallback_location: vinyls_path, alert: 'Failed to add vinyl to collection.'
+      respond_to_request({ error: 'Failed to add vinyl to collection.' }, :unprocessable_entity)
     end
   end
 
@@ -43,8 +39,15 @@ class UserVinylsController < ApplicationController
 
   private
 
+  def respond_to_request(data, status)
+    respond_to do |format|
+      format.json { render json: data, status: status }
+      format.html { redirect_back fallback_location: vinyls_path, alert: data[:error] || data[:message] }
+    end
+  end
+
   def user_vinyl_params
-    params.require(:user_vinyl).permit(:release_id, :cover_image)
+    params.permit(:release_id, :cover_image, user_vinyl: {})
   end
 
   def get_vinyl_from_discogs(release_id)
@@ -57,16 +60,16 @@ class UserVinylsController < ApplicationController
 
     vinyl = JSON.parse(URI.open(url).read)
     {
-      artist: artist_name,
-      artwork_url: vinyl['images'][0]['resource_url`'],
+      artist: vinyl.dig('artists', 0, 'name') || vinyl['artists_sort'] || 'Unknown Artist',
+      artwork_url: vinyl.dig('images', 0, 'resource_url'),
       country: vinyl['country'],
-      discogs_url: vinyl['release_id'],
-      genre: vinyl['genres'],
-      title: vinyl['title'],
-      year: vinyl['released']
+      discogs_url: "https://www.discogs.com/release/#{vinyl['id']}",
+      genre: vinyl['genres']&.join(', ') || 'Unknown Genre',
+      title: vinyl['title'] || 'Unknown Title',
+      year: vinyl['year'] || vinyl['released']
     }
   rescue OpenURI::HTTPError, JSON::ParserError, SocketError, URI::InvalidURIError => e
-    flash[:alert] = e.message
+    Rails.logger.error("Discogs API error: #{e.message}")
     nil
   end
 end
