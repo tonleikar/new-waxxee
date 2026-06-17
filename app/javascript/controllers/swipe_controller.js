@@ -5,7 +5,6 @@ export default class extends Controller {
   static targets = ["vinylWrapper", "template"]
 
   async connect() {
-    // this.lockPageScroll()
 
     this.index = 0
     this.startX = 0
@@ -184,7 +183,7 @@ export default class extends Controller {
         },
         body: JSON.stringify({
           release_id: vinyl.id,
-          cover_image: vinyl.cover_image
+          cover_image: vinyl.artwork_url || vinyl.cover_image
         })
       })
 
@@ -242,7 +241,7 @@ export default class extends Controller {
     card.dataset.discogsId = vinyl.id || ""
 
     if (artwork) {
-      artwork.src = vinyl.cover_image || artwork.src
+      artwork.src = vinyl.artwork_url || vinyl.cover_image || artwork.src
       artwork.alt = vinyl.title ? `${vinyl.title} cover` : "album cover"
     }
 
