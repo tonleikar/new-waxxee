@@ -5,7 +5,6 @@ export default class extends Controller {
   static targets = ["vinylWrapper", "template"]
 
   async connect() {
-    // this.lockPageScroll()
 
     this.index = 0
     this.startX = 0
@@ -28,31 +27,6 @@ export default class extends Controller {
     await this.getRecords()
     await this.renderCard()
   }
-
-  // lockPageScroll() {
-  //   this.scrollY = window.scrollY || window.pageYOffset || 0
-  //   this.previousHtmlOverflow = document.documentElement.style.overflow
-  //   this.previousBodyOverflow = document.body.style.overflow
-  //   this.previousBodyPosition = document.body.style.position
-  //   this.previousBodyTop = document.body.style.top
-  //   this.previousBodyWidth = document.body.style.width
-
-  //   document.documentElement.style.overflow = "hidden"
-  //   document.body.style.overflow = "hidden"
-  //   document.body.style.position = "fixed"
-  //   document.body.style.top = `-${this.scrollY}px`
-  //   document.body.style.width = "100%"
-  // }
-
-  // unlockPageScroll() {
-  //   document.documentElement.style.overflow = this.previousHtmlOverflow || ""
-  //   document.body.style.overflow = this.previousBodyOverflow || ""
-  //   document.body.style.position = this.previousBodyPosition || ""
-  //   document.body.style.top = this.previousBodyTop || ""
-  //   document.body.style.width = this.previousBodyWidth || ""
-
-  //   window.scrollTo(0, this.scrollY || 0)
-  // }
 
   async getRecords() {
     let data = null
@@ -209,7 +183,7 @@ export default class extends Controller {
         },
         body: JSON.stringify({
           release_id: vinyl.id,
-          cover_image: vinyl.cover_image
+          cover_image: vinyl.artwork_url || vinyl.cover_image
         })
       })
 
@@ -267,7 +241,7 @@ export default class extends Controller {
     card.dataset.discogsId = vinyl.id || ""
 
     if (artwork) {
-      artwork.src = vinyl.cover_image || artwork.src
+      artwork.src = vinyl.artwork_url || vinyl.cover_image || artwork.src
       artwork.alt = vinyl.title ? `${vinyl.title} cover` : "album cover"
     }
 

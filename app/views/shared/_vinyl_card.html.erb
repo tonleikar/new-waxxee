@@ -1,3 +1,4 @@
+<%# Depcrecated. Current template in /views/swiper %>
 <article class="welcome-vinyl-card is-ready"
          data-controller="vinyl-flip"
          aria-live="polite">
@@ -6,7 +7,6 @@
          alt="<%= vinyl.title %>"
          class="album-img">
   </div>
-
   <div class="vinyl-details">
     <h2><%= vinyl.title %></h2>
     <p><%= vinyl.artist.presence || "Unknown artist" %></p>
